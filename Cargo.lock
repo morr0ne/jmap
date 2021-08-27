@@ -438,6 +438,7 @@ dependencies = [
  "bytes",
  "clap",
  "env_logger",
+ "http",
  "indexmap",
  "log",
  "reqwest",

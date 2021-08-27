@@ -19,16 +19,23 @@ pub struct AccountCapabilities {
 }
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Mail {
-    pub maxMailboxesPerEmail: Option<NonZeroU32>,
-    pub maxMailboxDepth: Option<u32>,
-    pub maxSizeMailboxName: u32, // TODO: ensure it's at least 100
-    pub maxSizeAttachmentsPerEmail: u32,
-    pub emailQuerySortOptions: Vec<String>,
-    pub mayCreateTopLevelMailbox: bool,
+    #[serde(rename = "maxMailboxesPerEmail")]
+    pub max_mailboxes_per_email: Option<NonZeroU32>,
+    #[serde(rename = "maxMailboxDepth")]
+    pub max_mailbox_depth: Option<u32>,
+    #[serde(rename = "maxSizeMailboxName")]
+    pub max_size_mailbox_name: u32, // TODO: ensure it's at least 100
+    #[serde(rename = "maxSizeAttachmentsPerEmail")]
+    pub max_size_attachments_per_email: u32,
+    #[serde(rename = "emailQuerySortOptions")]
+    pub email_query_sort_options: Vec<String>,
+    #[serde(rename = "mayCreateTopLevelMailbox")]
+    pub may_create_top_level_mailbox: bool,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Submission {
-    pub maxDelayedSend: u32,
+    #[serde(rename = "maxDelayedSend")]
+    pub max_delayed_send: u32,
     // pub submissionExtensions: IndexMap<String, Vec<String>>, // TODO: cyrus server returns an array for some reason?
 }

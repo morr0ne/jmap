@@ -6,7 +6,13 @@ use crate::types::common::JsonObject;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Capabilities {
     #[serde(rename = "urn:ietf:params:jmap:core")]
-    pub core: JsonObject,
+    pub core: Core,
+    #[serde(rename = "urn:ietf:params:jmap:mail")]
+    pub mail: Option<JsonObject>,
+    #[serde(rename = "urn:ietf:params:jmap:submission")]
+    pub submission: Option<JsonObject>,
+    #[serde(rename = "urn:ietf:params:jmap:vacationresponse")]
+    pub vacation_response: Option<JsonObject>,
     #[serde(flatten)]
     pub unknown: IndexMap<String, JsonObject>,
 }

@@ -1,4 +1,5 @@
 use indexmap::IndexMap;
+use serde::de::DeserializeOwned;
 
 use crate::types::{AnyResult, HttpClient, Request, Response, Session};
 
@@ -52,17 +53,11 @@ impl Client {
         Ok(session)
     }
 
-    pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
-        let request = Request {
-            using: vec![String::from("urn:ietf:params:jmap:core")],
-            method_calls: vec![(
-                String::from("Core/echo"),
-                IndexMap::new(),
-                String::from("c0"),
-            )],
-            created_ids: None,
-        };
-
+    pub async fn send<T: DeserializeOwned>(
+        &self,
+        session: &Session,
+        request: Request,
+    ) -> AnyResult<T> {
         let response = self
             .http_client
             .post(session.api_url.clone())
@@ -75,6 +70,22 @@ impl Client {
             .await?
             .json()
             .await?;
+
+        Ok(response)
+    }
+
+    pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
+        let request = Request {
+            using: vec![String::from("urn:ietf:params:jmap:core")],
+            method_calls: vec![(
+                String::from("Core/echo"),
+                IndexMap::new(),
+                String::from("c0"),
+            )],
+            created_ids: None,
+        };
+
+        let response = self.send(session, request).await?;
 
         Ok(response)
     }

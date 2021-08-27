@@ -2,9 +2,9 @@ use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
-use crate::types::common::JsonObject;
-
+mod account_capabilities;
 mod capabilities;
+pub use account_capabilities::AccountCapabilities;
 pub use capabilities::Capabilities;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -33,5 +33,5 @@ pub struct Account {
     #[serde(rename = "isReadOnly")]
     pub is_read_only: bool,
     #[serde(rename = "accountCapabilities")]
-    pub account_capabilities: IndexMap<String, JsonObject>, // TODO: parse known capabilities
+    pub account_capabilities: AccountCapabilities, // TODO: parse known capabilities
 }

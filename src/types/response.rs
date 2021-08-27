@@ -8,7 +8,7 @@ pub struct Response {
     #[serde(rename = "methodResponses")]
     pub method_responses: Vec<Invocation>,
     pub created_ids: Option<IndexMap<String, String>>, // TODO: parse ids
-    #[serde(rename = "methodResponses")]
+    #[serde(rename = "sessionState")]
     pub session_state: String,
 }
 

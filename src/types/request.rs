@@ -13,7 +13,7 @@ pub struct Request {
 }
 
 // TODO: Request-Level Errors https://www.rfc-editor.org/rfc/rfc8620.html#section-3.6.1
-#[derive(Debug, Deserialize,Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct ResultReference {
     #[serde(rename = "resultOf")]
     pub result_of: String,

@@ -1,12 +1,16 @@
-use indexmap::IndexMap;
+use indexmap::{indexmap, IndexMap};
 use serde::de::DeserializeOwned;
 
-use crate::types::{AnyResult, HttpClient, Request, Response, Session};
+use crate::types::{AnyResult, HttpClient, JsonValue, Request, Response, Session};
+
+pub enum Auth {
+    Basic(String, Option<String>),
+    Bearer(String),
+}
 
 pub struct Client {
     http_client: HttpClient,
-    email: Option<String>,
-    password: Option<String>,
+    auth: Option<Auth>,
 }
 
 pub struct ClientBuilder;
@@ -19,8 +23,7 @@ impl ClientBuilder {
         let http_client = HttpClient::builder().build()?;
         Ok(Client {
             http_client,
-            email: None,
-            password: None,
+            auth: None,
         })
     }
 }
@@ -37,18 +40,19 @@ impl Client {
     }
 
     // TODO: better error handling
-    pub async fn auth(&mut self, server: &str, email: &str, password: &str) -> AnyResult<Session> {
-        let session = self
-            .http_client
-            .get(server)
-            .basic_auth(email, Some(password))
-            .send()
-            .await?
-            .json()
-            .await?;
+    pub async fn auth(&mut self, server: &str, auth: Auth) -> AnyResult<Session> {
+        let req = self.http_client.get(server);
 
-        self.email = Some(email.to_string());
-        self.password = Some(password.to_string());
+        let session = match auth {
+            Auth::Basic(ref username, ref password) => req.basic_auth(username, password.as_ref()),
+            Auth::Bearer(ref token) => req.bearer_auth(token),
+        }
+        .send()
+        .await?
+        .json()
+        .await?;
+
+        self.auth = Some(auth);
 
         Ok(session)
     }
@@ -58,18 +62,17 @@ impl Client {
         session: &Session,
         request: Request,
     ) -> AnyResult<T> {
-        let response = self
-            .http_client
-            .post(session.api_url.clone())
-            .basic_auth(
-                &self.email.as_ref().unwrap(),
-                Some(self.password.as_ref().unwrap()),
-            )
-            .json(&request)
-            .send()
-            .await?
-            .json()
-            .await?;
+        let req = self.http_client.post(session.api_url.clone());
+
+        let response = match self.auth.as_ref().unwrap() {
+            Auth::Basic(ref username, ref password) => req.basic_auth(username, password.as_ref()),
+            Auth::Bearer(ref token) => req.bearer_auth(token),
+        }
+        .json(&request)
+        .send()
+        .await?
+        .json()
+        .await?;
 
         Ok(response)
     }
@@ -80,6 +83,29 @@ impl Client {
             method_calls: vec![(
                 String::from("Core/echo"),
                 IndexMap::new(),
+                String::from("c0"),
+            )],
+            created_ids: None,
+        };
+
+        let response = self.send(session, request).await?;
+
+        Ok(response)
+    }
+
+    pub async fn mailbox(&self, session: &Session) -> AnyResult<Response> {
+        let request = Request {
+            using: vec![
+                String::from("urn:ietf:params:jmap:core"),
+                String::from("urn:ietf:params:jmap:mail"),
+            ],
+            method_calls: vec![(
+                String::from("Mailbox/get"),
+                indexmap! {
+                    String::from("accountId") => JsonValue::String(String::from("ue1e14034")),
+                    String::from("ids") => JsonValue::Null,
+                    String::from("properties") => JsonValue::Null,
+                },
                 String::from("c0"),
             )],
             created_ids: None,

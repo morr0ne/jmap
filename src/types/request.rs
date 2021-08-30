@@ -1,7 +1,7 @@
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
-use super::{Invocation, JsonValue};
+use super::{Id, Invocation, JsonValue};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Request<T = indexmap::IndexMap<String, JsonValue>> {
@@ -9,7 +9,7 @@ pub struct Request<T = indexmap::IndexMap<String, JsonValue>> {
     #[serde(rename = "methodCalls")]
     pub method_calls: Vec<Invocation<T>>,
     #[serde(rename = "createdIds")]
-    pub created_ids: Option<IndexMap<String, String>>, // TODO: parse ids
+    pub created_ids: Option<IndexMap<Id, Id>>,
 }
 
 pub struct RequestBuilder {

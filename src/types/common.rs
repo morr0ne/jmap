@@ -8,3 +8,5 @@ pub type JsonObject = JsonMap<String, JsonValue>;
 pub type HttpClient = reqwest::Client;
 
 pub type Invocation<T = String, V = JsonValue> = (String, indexmap::IndexMap<T, V>, String); // TODO: parse invocation id
+
+pub type Id = String;

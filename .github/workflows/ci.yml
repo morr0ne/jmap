@@ -8,8 +8,8 @@ jobs:
     strategy:
       matrix:
         rust:
-          - stable
-          - beta
+          # - stable
+          # - beta
           - nightly
           # - 1.31.0 # MSRV
 

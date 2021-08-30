@@ -1,7 +1,7 @@
 use indexmap::{indexmap, IndexMap};
 use serde::de::DeserializeOwned;
 
-use crate::types::{AnyResult, HttpClient, JsonValue, Request, Response, Session};
+use crate::types::{AnyResult, HttpClient, Invocation, JsonValue, Request, Response, Session};
 
 pub enum Auth {
     Basic(String, Option<String>),
@@ -80,7 +80,7 @@ impl Client {
     pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
         let request = Request {
             using: vec![String::from("urn:ietf:params:jmap:core")],
-            method_calls: vec![(
+            method_calls: vec![Invocation(
                 String::from("Core/echo"),
                 IndexMap::new(),
                 String::from("c0"),
@@ -99,7 +99,7 @@ impl Client {
                 String::from("urn:ietf:params:jmap:core"),
                 String::from("urn:ietf:params:jmap:mail"),
             ],
-            method_calls: vec![(
+            method_calls: vec![Invocation(
                 String::from("Mailbox/get"),
                 indexmap! {
                     String::from("accountId") => JsonValue::String(String::from("ue1e14034")),

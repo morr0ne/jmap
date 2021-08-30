@@ -11,7 +11,7 @@ pub struct Request {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Get<T> {
+pub struct Response<T> {
     pub state: String,
     pub list: Vec<T>,
     #[serde(rename = "notFound")]

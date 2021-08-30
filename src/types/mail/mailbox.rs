@@ -1,9 +1,11 @@
 use serde::{Deserialize, Serialize};
 
+use crate::types::Id;
+
 #[derive(Debug, Deserialize, Serialize)]
 
 pub struct Mailbox {
-    pub id: String, // TODO: parse id
+    pub id: Id,
     pub name: String,
     #[serde(rename = "parentId")]
     pub parent_id: Option<String>,

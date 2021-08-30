@@ -5,12 +5,6 @@
 
 Jmap client and server implementation in rust
 
-### TODO
-- [ ] Id parsing
-- [ ] Dns resolution
-- [ ] I-JSON support (Needs upstream serde support)
-- [ ] Drop reqwest for finer graned control
-
 ### Goals
 - [ ] Have a working prototype
 - [ ] Working client implementation

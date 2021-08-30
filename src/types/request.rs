@@ -27,6 +27,14 @@ impl RequestBuilder {
         self.capabilities.push(capability);
         self
     }
+
+    pub fn build(self) -> Request {
+        Request {
+            using: self.capabilities,
+            method_calls: Vec::new(),
+            created_ids: None,
+        }
+    }
 }
 
 impl Default for RequestBuilder {

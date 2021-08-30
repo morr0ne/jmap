@@ -1,5 +1,7 @@
 # Warning: This library is still wip
 # jmap-rs
+[![Continuous integration](https://github.com/morr0ne/jmap/actions/workflows/ci.yml/badge.svg)](https://github.com/morr0ne/jmap/actions/workflows/ci.yml)
+[![Security audit](https://github.com/morr0ne/jmap/actions/workflows/audit.yml/badge.svg)](https://github.com/morr0ne/jmap/actions/workflows/audit.yml)
 
 Jmap client and server implementation in rust
 

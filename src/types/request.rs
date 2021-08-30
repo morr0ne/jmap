@@ -13,27 +13,27 @@ pub struct Request<T = indexmap::IndexMap<String, JsonValue>> {
 }
 
 pub struct RequestBuilder {
-    capabilities: Vec<String>,
+    inner: Request,
 }
 
 impl RequestBuilder {
     pub fn new() -> Self {
         Self {
-            capabilities: Vec::new(),
+            inner: Request {
+                using: Vec::new(),
+                method_calls: Vec::new(),
+                created_ids: None,
+            },
         }
     }
 
     pub fn capability(mut self, capability: String) -> Self {
-        self.capabilities.push(capability);
+        self.inner.using.push(capability);
         self
     }
 
     pub fn build(self) -> Request {
-        Request {
-            using: self.capabilities,
-            method_calls: Vec::new(),
-            created_ids: None,
-        }
+        self.inner
     }
 }
 

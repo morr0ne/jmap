@@ -27,3 +27,6 @@ Jmap client and server implementation in rust
 - [ ] Find an original name for the library
 - [ ] Separate into different crates (monorepo?)
 - [ ] Example client
+
+## MSRV policy
+No MSRV is planned until the library reaches a somewhat stable status. It is currently checked against the latest nightly, beta and stable channels

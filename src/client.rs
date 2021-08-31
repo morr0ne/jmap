@@ -1,9 +1,6 @@
-use indexmap::{indexmap, IndexMap};
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::types::{
-    methods::get, AnyResult, HttpClient, Invocation, JsonValue, Request, Response, Session,
-};
+use crate::types::{methods::get, AnyResult, HttpClient, Invocation, Request, Response, Session};
 
 pub enum Auth {
     Basic(String, Option<String>),

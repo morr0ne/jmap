@@ -1,5 +1,6 @@
 # Warning: This library is still wip
 # jmap-rs
+[![dependency status](https://deps.rs/repo/github/morr0ne/jmap/status.svg)](https://deps.rs/repo/github/morr0ne/jmap)
 [![Continuous integration](https://github.com/morr0ne/jmap/actions/workflows/ci.yml/badge.svg)](https://github.com/morr0ne/jmap/actions/workflows/ci.yml)
 [![Security audit](https://github.com/morr0ne/jmap/actions/workflows/audit.yml/badge.svg)](https://github.com/morr0ne/jmap/actions/workflows/audit.yml)
 

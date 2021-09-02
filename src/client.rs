@@ -1,6 +1,8 @@
-use serde::{de::DeserializeOwned, Serialize};
+use serde::de::DeserializeOwned;
 
-use crate::types::{methods::get, AnyResult, HttpClient, Invocation, Request, Response, Session};
+use crate::types::{
+    AnyResult, HttpClient, Invocation, JsonValue, Request, RequestBuilder, Response, Session,
+};
 
 pub enum Auth {
     Basic(String, Option<String>),
@@ -56,10 +58,10 @@ impl Client {
         Ok(session)
     }
 
-    pub async fn send<R: Serialize, T: DeserializeOwned>(
+    pub async fn send<T: DeserializeOwned>(
         &self,
         session: &Session,
-        request: Request<R>,
+        request: Request,
     ) -> AnyResult<T> {
         let req = self.http_client.post(session.api_url.clone());
 
@@ -76,39 +78,31 @@ impl Client {
         Ok(response)
     }
 
-    // pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
-    //     let request = Request {
-    //         using: vec![String::from("urn:ietf:params:jmap:core")],
-    //         method_calls: vec![Invocation(
-    //             String::from("Core/echo"),
-    //             IndexMap::new(),
-    //             String::from("c0"),
-    //         )],
-    //         created_ids: None,
-    //     };
+    pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
+        let request = RequestBuilder::new()
+            .capability("urn:ietf:params:jmap:core")
+            .method(Invocation::new("Core/echo", [], "c0"))
+            .build();
 
-    //     let response = self.send(session, request).await?;
+        let response = self.send(session, request).await?;
 
-    //     Ok(response)
-    // }
+        Ok(response)
+    }
 
     pub async fn mailbox(&self, session: &Session) -> AnyResult<Response> {
-        let request: Request<get::Request> = Request {
-            using: vec![
-                String::from("urn:ietf:params:jmap:core"),
-                String::from("urn:ietf:params:jmap:mail"),
-            ],
-            method_calls: vec![Invocation(
-                String::from("Mailbox/get"),
-                get::Request {
-                    account_id: String::from("ue1e14034"),
-                    ids: None,
-                    properties: None,
-                },
-                String::from("c0"),
-            )],
-            created_ids: None,
-        };
+        let request = RequestBuilder::new()
+            .capability("urn:ietf:params:jmap:core")
+            .capability("urn:ietf:params:jmap:mail")
+            .method(Invocation::new(
+                "Mailbox/get",
+                [
+                    (String::from("accountId"), "ue1e14034".into()),
+                    (String::from("ids"), JsonValue::Null),
+                    (String::from("properties"), JsonValue::Null),
+                ],
+                "c0",
+            ))
+            .build();
 
         let response = self.send(session, request).await?;
 

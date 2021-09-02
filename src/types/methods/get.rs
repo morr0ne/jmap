@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::types::Id;
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Request {
+pub struct Arguments {
     #[serde(rename = "accountId")]
     pub account_id: Id,
     pub ids: Option<Vec<Id>>,

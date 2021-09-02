@@ -1,7 +1,7 @@
 use serde::de::DeserializeOwned;
 
 use crate::types::{
-    AnyResult, HttpClient, Invocation, JsonValue, Request, RequestBuilder, Response, Session,
+    AnyResult, HttpClient, Invocation, JsonValue, Request, RequestBuilder, Response, SessionObject,
 };
 
 pub enum Auth {
@@ -41,7 +41,7 @@ impl Client {
     }
 
     // TODO: better error handling
-    pub async fn auth(&mut self, server: &str, auth: Auth) -> AnyResult<Session> {
+    pub async fn auth(&mut self, server: &str, auth: Auth) -> AnyResult<SessionObject> {
         let req = self.http_client.get(server);
 
         let session = match auth {
@@ -60,7 +60,7 @@ impl Client {
 
     pub async fn send<T: DeserializeOwned>(
         &self,
-        session: &Session,
+        session: &SessionObject,
         request: Request,
     ) -> AnyResult<T> {
         let req = self.http_client.post(session.api_url.clone());
@@ -78,7 +78,7 @@ impl Client {
         Ok(response)
     }
 
-    pub async fn echo(&self, session: &Session) -> AnyResult<Response> {
+    pub async fn echo(&self, session: &SessionObject) -> AnyResult<Response> {
         let request = RequestBuilder::new()
             .capability("urn:ietf:params:jmap:core")
             .method(Invocation::new("Core/echo", [], "c0"))
@@ -89,7 +89,7 @@ impl Client {
         Ok(response)
     }
 
-    pub async fn mailbox(&self, session: &Session) -> AnyResult<Response> {
+    pub async fn mailbox(&self, session: &SessionObject) -> AnyResult<Response> {
         let request = RequestBuilder::new()
             .capability("urn:ietf:params:jmap:core")
             .capability("urn:ietf:params:jmap:mail")

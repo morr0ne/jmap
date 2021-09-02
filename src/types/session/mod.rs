@@ -8,7 +8,7 @@ pub use account_capabilities::AccountCapabilities;
 pub use capabilities::Capabilities;
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Session {
+pub struct SessionObject {
     pub capabilities: Capabilities, // TODO: parse known capabilities
     pub accounts: IndexMap<String, Account>, // TODO: possibily parse id
     #[serde(rename = "primaryAccounts")]

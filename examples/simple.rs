@@ -21,7 +21,7 @@ async fn main() -> anyhow::Result<()> {
         .auth(server, Auth::Basic(email, Some(password)))
         .await?;
 
-    let res = client.mailbox(&session).await?;
+    let res = session.mailbox().await?;
     // dbg!(&res);
 
     fs::write("temp/jmap.json", serde_json::to_vec(&res)?).await?;

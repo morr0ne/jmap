@@ -1,15 +1,15 @@
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
-use super::{Id, Invocation, JsonValue};
+use super::{Id, Invocation};
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Request<T = indexmap::IndexMap<String, JsonValue>> {
-    pub using: Vec<String>,
+pub struct Request {
+    using: Vec<String>,
     #[serde(rename = "methodCalls")]
-    pub method_calls: Vec<Invocation<T>>,
+    method_calls: Vec<Invocation>,
     #[serde(rename = "createdIds")]
-    pub created_ids: Option<IndexMap<Id, Id>>,
+    created_ids: Option<IndexMap<Id, Id>>,
 }
 
 pub struct RequestBuilder {
@@ -27,45 +27,23 @@ impl RequestBuilder {
         }
     }
 
-    pub fn with_capabilities<C: Into<Vec<String>>>(capabilities: C) -> Self {
-        Self {
-            inner: Request {
-                using: capabilities.into(),
-                method_calls: Vec::new(),
-                created_ids: None,
-            },
-        }
-    }
-
-    pub fn with_method_calls<M: Into<Vec<Invocation>>>(method_calls: M) -> Self {
-        Self {
-            inner: Request {
-                using: Vec::new(),
-                method_calls: method_calls.into(),
-                created_ids: None,
-            },
-        }
-    }
-
-    pub fn with_capabilities_and_method_calls<C: Into<Vec<String>>, M: Into<Vec<Invocation>>>(
-        capabilities: C,
-        method_calls: M,
-    ) -> Self {
-        Self {
-            inner: Request {
-                using: capabilities.into(),
-                method_calls: method_calls.into(),
-                created_ids: None,
-            },
-        }
-    }
-
-    pub fn capability(mut self, capability: String) -> Self {
-        self.inner.using.push(capability);
+    pub fn capability<C: Into<String>>(mut self, capability: C) -> Self {
+        self.inner.using.push(capability.into());
         self
     }
 
-    pub fn method_call(mut self) -> Self {
+    pub fn capabilities<C: IntoIterator<Item = String>>(mut self, capabilities: C) -> Self {
+        self.inner.using.extend(capabilities);
+        self
+    }
+
+    pub fn method<I: Into<Invocation>>(mut self, invocation: I) -> Self {
+        self.inner.method_calls.push(invocation.into());
+        self
+    }
+
+    pub fn methods<I: IntoIterator<Item = Invocation>>(mut self, invocations: I) -> Self {
+        self.inner.method_calls.extend(invocations);
         self
     }
 

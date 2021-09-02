@@ -1,3 +1,7 @@
+# Cargo stuff
 /target
+Cargo.lock
+
+# Temporary directories
 /temp
 /tmp
